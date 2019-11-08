@@ -17,7 +17,7 @@ from sklearn.externals import joblib
 from flask import Flask
 
 app = Flask(__name__)
-@app.route('/process-model')
+@app.route('/process-model', methods=['POST'])
 def handler():
     #import pickle
     '''
