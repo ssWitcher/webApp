@@ -14,9 +14,14 @@ from scipy.signal import filtfilt
 from scipy.stats import kurtosis
 from statistics import mode
 from sklearn.externals import joblib
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
+
+@app.route("/")
+def welcome():
+    render_template("./templates/index.html")
+    
 @app.route('/process-model', methods=['POST'])
 def handler():
     #import pickle
@@ -178,11 +183,11 @@ def handler():
         return w
 
     def msm_filtering(x,L1,sigma1): #correct
-    w = gausswin(L1, sigma1)
-    b = np.diff(w,1)
-    a = 1
-    y = filtfilt(b,a,x)
-    return y
+        w = gausswin(L1, sigma1)
+        b = np.diff(w,1)
+        a = 1
+        y = filtfilt(b,a,x)
+        return y
 
     def returnval(x,y): #correct
         c = []
@@ -192,29 +197,29 @@ def handler():
 
 
     def msm_rpeakdetector_filtering(x,Fs): #correct
-    L1 = math.floor(0.12*(Fs/2))
-    sigma1=2
-    y=msm_filtering(x,L1,sigma1)
-    thrcoeff=1
-    windowSize=math.floor(0.1*Fs)
-    d=[0]
-    x99 = list(np.diff(y,1))
-    for p in x99:
-        d.append(p)
+        L1 = math.floor(0.12*(Fs/2))
+        sigma1=2
+        y=msm_filtering(x,L1,sigma1)
+        thrcoeff=1
+        windowSize=math.floor(0.1*Fs)
+        d=[0]
+        x99 = list(np.diff(y,1))
+        for p in x99:
+            d.append(p)
 
-    see = msm_envelope(d,thrcoeff,windowSize)
-    L2=math.floor(2.5*Fs)
-    sigma2=math.floor(0.05*Fs)
+        see = msm_envelope(d,thrcoeff,windowSize)
+        L2=math.floor(2.5*Fs)
+        sigma2=math.floor(0.05*Fs)
 
-    [rlap, s, z1]=msm_peakfindinglogic(L2,sigma2,see)
-    NW = math.floor(0.0833*Fs)
+        [rlap, s, z1]=msm_peakfindinglogic(L2,sigma2,see)
+        NW = math.floor(0.0833*Fs)
 
 
-    Rpeak = msm_truepeaklogic(rlap,NW,x) # testing here
-    dummy = [i for i in range(len(x))]
+        Rpeak = msm_truepeaklogic(rlap,NW,x) # testing here
+        dummy = [i for i in range(len(x))]
 
-    t = np.divide(dummy, Fs)
-    return y,see,z1,Rpeak
+        t = np.divide(dummy, Fs)
+        return y,see,z1,Rpeak
 
 
 
@@ -277,34 +282,34 @@ def handler():
         return B_L
 
     def msm_zerocros(z): #correct
-    p = 1
-    i = 0
-    f = []
-    while i < len(z)-1:
-        if(np.sign(z[i])>0) and (np.sign(z[i+1])<0):
-        f.append(i)
-        p=p+1
-        i+=1
-    z=list(z)
-    s = np.subtract(returnval(z,np.add(f,1)),returnval(z,f))
-    rlap = f
+        p = 1
+        i = 0
+        f = []
+        while i < len(z)-1:
+            if(np.sign(z[i])>0) and (np.sign(z[i+1])<0):
+                f.append(i)
+                p=p+1
+            i+=1
+        z=list(z)
+        s = np.subtract(returnval(z,np.add(f,1)),returnval(z,f))
+        rlap = f
     return rlap,s
 
     def msm_peakfindinglogic(L2,sigma2,senvelope): #correct
-    L=L2
-    s=L/(2*sigma2)
-    n=np.arange(-L/2,L/2,1)
-    G=np.exp(np.multiply(np.power(np.divide(n,s),2),(-0.5)))
-    h = np.diff(G)
-    len(h)
-    len(senvelope)
-    z=np.convolve(senvelope,h)
-    LG=len(h)
-    ss=LG/2
-    end=len(z)-1
-    z1=z[int(ss-1):int(end-ss+1)]
-    [rlap,s] = msm_zerocros(z1)
-    return rlap,s,z1
+        L=L2
+        s=L/(2*sigma2)
+        n=np.arange(-L/2,L/2,1)
+        G=np.exp(np.multiply(np.power(np.divide(n,s),2),(-0.5)))
+        h = np.diff(G)
+        len(h)
+        len(senvelope)
+        z=np.convolve(senvelope,h)
+        LG=len(h)
+        ss=LG/2
+        end=len(z)-1
+        z1=z[int(ss-1):int(end-ss+1)]
+        [rlap,s] = msm_zerocros(z1)
+        return rlap,s,z1
 
     tio = []
     tio = msm_rpeakdetector_filtering(np.transpose(Xnew1),fs)
@@ -538,5 +543,5 @@ def handler():
 
     os.remove('./uploads/1.mat')
 
-if _name == '__main_':
+if __name__ == '__main_':
     app.run(debug=True, port=5000)
