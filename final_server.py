@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def welcome():
-    render_template("./templates/index.html")
+    return render_template("./templates/index.html")
     
 @app.route('/process-model', methods=['POST'])
 def handler():
@@ -542,6 +542,8 @@ def handler():
         f.write("%s\n" %Decision)
 
     os.remove('./uploads/1.mat')
+    
+    return render_template("./templates/index.html")
 
 if __name__ == '__main_':
     app.run(debug=True, port=5000)
