@@ -12,4 +12,4 @@ COPY ./ ./
 
 EXPOSE 5000
 
-CMD ["python","final_server.py"]
+CMD ["python","index.py"]
