@@ -16,8 +16,10 @@ from statistics import mode
 from sklearn.externals import joblib
 from flask import Flask, render_template
 
-app = Flask(__name__)
+print("Abey")
 
+app = Flask(__name__)
+print("Bhosdi")
 @app.route("/")
 def welcome():
     return render_template("./templates/index.html")
@@ -546,4 +548,7 @@ def handler():
     return render_template("./templates/index.html")
 
 if __name__ == '__main_':
+    print("Here")
     app.run(debug=True, port=5000)
+    
+print("Hello")
