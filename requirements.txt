@@ -14,3 +14,4 @@ scikit-learn==0.18.1
 scipy==0.19.0
 six==1.13.0
 Werkzeug==0.16.0
+zipfile

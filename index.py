@@ -16,6 +16,7 @@ from statistics import mode
 from sklearn.externals import joblib
 from flask import Flask, render_template, request
 from werkzeug import secure_filename
+from zipfile import ZipFile
 
 app = Flask(__name__, template_folder='templates')
 
@@ -24,15 +25,16 @@ app = Flask(__name__, template_folder='templates')
 def welcome():
     return render_template("index.html")
 
-@app.route('/result')
-def result():
-    return render_template("result.html")
-
 @app.route('/process', methods=["POST"])
 def handler():
     f = request.files['fle']
     f.save(secure_filename(f.filename))
     mat_file = f.filename
+    
+    with ZipFile('result.zip', 'w') as zipObj:
+        zipObj.write('decision.txt')
+        zipObj.write('diastolic.png')
+        zipObj.write('ecgscg.png')
     #import pickle
     '''
     #delete mat files that were saved before
@@ -552,11 +554,15 @@ def handler():
     with open('./decision.txt','w') as f:
         f.write("%s\n" %Decision)
 
-    os.remove('./uploads/1.mat')
+    with ZipFile('result.zip', 'w') as zipObj:
+        zipObj.write('decision.txt')
+        zipObj.write('diastolic.png')
+        zipObj.write('ecgscg.png')
     
-    return render_template("result.html")
+    
+    return send_file('result.zip', mimetype='application/zip')
 
 
 if __name__ == '__main__':
     print("Hi")
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0')
