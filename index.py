@@ -32,6 +32,8 @@ def welcome():
 
 @app.route('/process', methods=["POST"])
 def handler():
+    if os.path.exists(os.path.join(os.getcwd(),'decision.txt')):
+        os.remove(os.path.join(os.getcwd(),'decision.txt'))
     f = request.files['fle']
     f.save(secure_filename(f.filename))
     mat_file = f.filename
@@ -562,17 +564,18 @@ def handler():
     
     
     return send_file('result.zip', mimetype='application/zip')"""
-    if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'decision.txt')):
-        os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'decision.txt'))
     if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'diastolic.png')):
         os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'diastolic.png'))
     if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png')):
         os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png'))
       
-    shutil.move('decision.txt', os.path.join(os.getcwd(),'static'))
     shutil.move('diastolic.png', os.path.join(os.getcwd(),'static'))
     shutil.move('ecgscg.png', os.path.join(os.getcwd(),'static'))
-    return render_template("result.html")
+    with open("decision.txt", "r") as fileHandler:
+        content = fileHandler.read()
+        
+    
+    return render_template("result.html", text=content)
     
     
     
