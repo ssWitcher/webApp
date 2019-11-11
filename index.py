@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import os
 import math
 import numpy as np
@@ -570,7 +572,7 @@ def handler():
     shutil.move('decision.txt', os.path.join(os.getcwd(),'static'))
     shutil.move('diastolic.png', os.path.join(os.getcwd(),'static'))
     shutil.move('ecgscg.png', os.path.join(os.getcwd(),'static'))
-    render_template("result.html")
+    return render_template("result.html")
     
     
     
@@ -578,4 +580,4 @@ def handler():
 
 if __name__ == '__main__':
     print("Hi")
-    app.run(host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')
