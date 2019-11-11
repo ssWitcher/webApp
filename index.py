@@ -567,9 +567,9 @@ def handler():
     if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png')):
         os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png'))
       
-    shutil.move('decision.txt', os.path.join(curr_dir,'static'))
-    shutil.move('diastolic.png', os.path.join(curr_dir,'static'))
-    shutil.move('ecgscg.png', os.path.join(curr_dir,'static'))
+    shutil.move('decision.txt', os.path.join(os.getcwd(),'static'))
+    shutil.move('diastolic.png', os.path.join(os.getcwd(),'static'))
+    shutil.move('ecgscg.png', os.path.join(os.getcwd(),'static'))
     render_template("result.html")
     
     
