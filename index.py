@@ -30,11 +30,7 @@ def handler():
     f = request.files['fle']
     f.save(secure_filename(f.filename))
     mat_file = f.filename
-    
-    with ZipFile('result.zip', 'w') as zipObj:
-        zipObj.write('decision.txt')
-        zipObj.write('diastolic.png')
-        zipObj.write('ecgscg.png')
+
     #import pickle
     '''
     #delete mat files that were saved before
