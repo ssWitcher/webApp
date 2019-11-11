@@ -5,7 +5,6 @@ import numpy.matlib
 import statistics
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.p
 from scipy import signal
 from scipy.io import loadmat
 from scipy import interpolate
