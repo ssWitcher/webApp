@@ -302,7 +302,7 @@ def handler():
         z=list(z)
         s = np.subtract(returnval(z,np.add(f,1)),returnval(z,f))
         rlap = f
-    return rlap,s
+        return rlap,s
 
     def msm_peakfindinglogic(L2,sigma2,senvelope): #correct
         L=L2
