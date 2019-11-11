@@ -17,6 +17,9 @@ from sklearn.externals import joblib
 from flask import Flask, render_template, request, send_file
 from werkzeug import secure_filename
 from zipfile import ZipFile
+import os
+import shutil
+
 
 app = Flask(__name__, template_folder='templates')
 
@@ -550,13 +553,27 @@ def handler():
     with open('./decision.txt','w') as f:
         f.write("%s\n" %Decision)
 
-    with ZipFile('result.zip', 'w') as zipObj:
+    """with ZipFile('result.zip', 'w') as zipObj:
         zipObj.write('decision.txt')
         zipObj.write('diastolic.png')
         zipObj.write('ecgscg.png')
     
     
-    return send_file('result.zip', mimetype='application/zip')
+    return send_file('result.zip', mimetype='application/zip')"""
+    if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'decision.txt')):
+        os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'decision.txt'))
+    if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'diastolic.png')):
+        os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'diastolic.png'))
+    if os.path.exists(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png')):
+        os.remove(os.path.join(os.path.join(os.getcwd(),'static'), 'ecgscg.png'))
+      
+    shutil.move('decision.txt', os.path.join(curr_dir,'static'))
+    shutil.move('diastolic.png', os.path.join(curr_dir,'static'))
+    shutil.move('ecgscg.png', os.path.join(curr_dir,'static'))
+    render_template("result.html")
+    
+    
+    
 
 
 if __name__ == '__main__':
