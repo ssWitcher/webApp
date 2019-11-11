@@ -4,7 +4,9 @@ import numpy as np
 import numpy.matlib
 import statistics
 import pandas as pd
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.p
 from scipy import signal
 from scipy.io import loadmat
 from scipy import interpolate
@@ -14,7 +16,7 @@ from scipy.signal import filtfilt
 from scipy.stats import kurtosis
 from statistics import mode
 from sklearn.externals import joblib
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from werkzeug import secure_filename
 from zipfile import ZipFile
 
